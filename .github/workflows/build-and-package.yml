@@ -33,6 +33,9 @@ jobs:
           npm rebuild node-sass
           npm run build
 
+      - name: Print PHP Version
+        run: php -v
+
       - name: Build Backend
         run: |
           cd server
