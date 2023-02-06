@@ -37,6 +37,7 @@ jobs:
         working-directory: ./
         run: |
           cd server
+          composer update
           composer install
           echo -n > config.php
           mkdir files2
