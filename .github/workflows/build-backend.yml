@@ -1,4 +1,4 @@
-name: Build and Package App
+name: Build Backend
 
 on:
   push:
@@ -7,22 +7,10 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-
-      - name: Use Node.js 11.x
-        uses: actions/setup-node@v3
-        with:
-          node-version: 11.x
-
-      - name: Build Frontend
-        working-directory: ./client
-        run: |
-          npm install
-          npm rebuild node-sass
-          npm run build
 
       - name: Install PHP 7.4 and Composer
         run: |
@@ -32,6 +20,9 @@ jobs:
           sudo apt-get install -y curl
           sudo curl -sS https://getcomposer.org/installer | php
           sudo mv composer.phar /usr/local/bin/composer
+
+      - name: Print PHP Version
+        run: php -v
 
       - name: Build Backend
         working-directory: ./
