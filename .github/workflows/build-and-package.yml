@@ -23,6 +23,9 @@ jobs:
       - name: Install Composer
         run: curl -sS https://getcomposer.org/installer | php
 
+      - name: Install PHP 7.4
+        run: sudo apt-get update && sudo apt-get install -y php7.4
+
       - name: Build Frontend
         run: |
           cd client
