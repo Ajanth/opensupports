@@ -12,17 +12,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Install PHP 7.4 and Composer
-        run: |
-          sudo add-apt-repository ppa:ondrej/php
-          sudo apt-get update
-          sudo apt-get install -y php7.4
-          sudo apt-get install -y curl
-          sudo curl -sS https://getcomposer.org/installer | php
-          sudo mv composer.phar /usr/local/bin/composer
+      - name: Use PHP 7.4
+        run: sudo update-alternatives --set php /usr/bin/php7.4
 
       - name: Print PHP Version
         run: php -v
+
+      - name: Install Composer
+        run: curl -sS https://getcomposer.org/installer | php
 
       - name: Build Backend
         working-directory: ./
