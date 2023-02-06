@@ -9,7 +9,7 @@ env:
   NODE_VERSION: 11.x
 
 jobs:
-  build:
+  build-and-publish:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -33,6 +33,7 @@ jobs:
       - name: Build Backend
         run: |
           cd server
+          composer update
           composer install
 
       - name: Package App
