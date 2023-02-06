@@ -24,6 +24,7 @@ OpenSupport uses by default the port 3000, but this port could already be used. 
 ##### Production Task
 
 Just as there is a task for development, there is also a `npm build` task for putting the project into a production-ready state. This will run each of the tasks, while also adding the image minification task discussed above and the result store in `dist/` folder.
+- Note: On windows, the npm build will throw an error. replace the script occurence of NODE_ENV="production" with $env:NODE_ENV="production" or run the build commands manually.
 
 **Reminder:** Notice there is `index.html` and `index.php`. The first one searches the backend server where `config.js` says it, the second one uses `/api` to find the server. If you want to run OpenSupports in a single server, then use `index.php`.
 
@@ -35,6 +36,9 @@ Just as there is a task for development, there is also a `npm build` task for pu
 ### Getting up and running BACK-END (server folder)
 1. Install [Docker CE](https://docs.docker.com/install/)
 2. Go to the server folder: `cd opensupports/server`
+- Note: On windows, install docker desktop and wsl2, if you already had wsl1 you'll have to upgrade it wsl2 using commands below
+  wsl --set-version <distribution name> <versionNumber>, where distribution name is what you installed for version 1, e.g: Ubuntu
+  On a fresh WSL, you will want to install make
 3. Run `make build` to build the images
 4. Run `make install` to install composer dependencies
 
