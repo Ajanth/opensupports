@@ -7,6 +7,7 @@ on:
 
 env:
   NODE_VERSION: 11.x
+  PHP_VERSION: 7.4
 
 jobs:
   build-and-publish:
@@ -20,11 +21,11 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
 
+      - name: Use PHP ${{ env.PHP_VERSION }}
+        run: sudo update-alternatives --set php /usr/bin/php{{ env.PHP_VERSION }}
+
       - name: Install Composer
         run: curl -sS https://getcomposer.org/installer | php
-
-      - name: Install PHP 7.4
-        run: sudo apt-get update && sudo apt-get install -y php7.4
 
       - name: Build Frontend
         run: |
@@ -32,9 +33,6 @@ jobs:
           npm install
           npm rebuild node-sass
           npm run build
-
-      - name: Print PHP Version
-        run: php -v
 
       - name: Build Backend
         run: |
