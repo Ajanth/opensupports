@@ -1,4 +1,4 @@
-name: Build Backend
+name: Build And Publish
 
 on:
   push:
@@ -9,11 +9,23 @@ jobs:
   build:
     runs-on: ubuntu-20.04
     steps:
-      - name: Checkout code
+      - name: Checkout Code
         uses: actions/checkout@v3
 
       - name: Use PHP 7.4
         run: sudo update-alternatives --set php /usr/bin/php7.4
+
+      - name: Use Node.js 11.x
+        uses: actions/setup-node@v3
+        with:
+          node-version: 11.x
+
+      - name: Build Frontend
+        working-directory: ./client
+        run: |
+          npm install
+          npm rebuild node-sass
+          npm run build
 
       - name: Print PHP Version
         run: php -v
@@ -27,6 +39,10 @@ jobs:
           cd server
           composer update
           composer install
+      - name: Publish Artifact
+        working-directory: ./
+        run: |
+          cd server
           echo -n > config.php
           mkdir files2
           cp files/.htaccess files2
@@ -58,3 +74,23 @@ jobs:
           zip -ur opensupports_dev.zip api
           mkdir dist
           mv opensupports_dev.zip dist
+
+      - name: Get Current Version
+        id: current_version
+        run: echo "::set-output name=version::$(cat version.txt)"
+
+      - name: Get Latest Release Version
+        id: latest_release
+        run: |
+          curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" "https://api.github.com/repos/${{ github.repository }}/releases/latest" > release.json
+          jq -r '.tag_name' release.json > latest_version.txt
+          cat latest_version.txt
+
+      - name: Publish as Release
+        if: steps.latest_release.outputs.latest != steps.current_version.outputs.version
+        uses: actions/create-release@latest
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ steps.current_version.outputs.version }}
+          prerelease: true
